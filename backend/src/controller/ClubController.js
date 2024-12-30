@@ -43,12 +43,13 @@ exports.getClubs = async (req, res) => {
         if (coordinatorId) {
             filter.members = coordinatorId;
         }
-
+         
+        const totalCount = await ClubModel.countDocuments(filter); 
         const clubs = await ClubModel.find(filter)
             .limit(limit ? parseInt(limit) : 30)
             .skip(skip ? parseInt(skip) : 0);
 
-        res.status(200).json({ message: "Clubs fetched Successfully", clubs: clubs, isError: false });
+        res.status(200).json({ message: "Clubs fetched Successfully", clubs: clubs, totalCount: totalCount, isError: false });
     } catch (error) {
         console.error("Error:", error.message);
         res.status(500).json({ isError: true, message: "Internal Server Error", clubs: [] });
